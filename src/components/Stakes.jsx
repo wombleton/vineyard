@@ -6,20 +6,20 @@ import _ from 'lodash'
 import { TextField } from 'material-ui'
 
 class Stakes extends React.Component {
-  setStakes = () => {
+  setStakes = e => {
     const { sceneId, firebase } = this.props
     const { uid: author } = firebase.auth().currentUser
     firebase.set(`/scenes/${sceneId}/stakes`, {
       author,
-      val: this.field.getValue(),
+      val: e.target.value,
     })
   }
-  render() {
+  render = () => {
+    const val = _.get(this, 'props.scene.stakes.val')
     return (
       <TextField
-        ref={c => {
-          this.field = c
-        }}
+        onChange={this.setStakes}
+        value={val}
         label="Stakes"
         placeholder="Set stakes for this scene"
         multiline
