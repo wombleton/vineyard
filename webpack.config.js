@@ -69,11 +69,11 @@ module.exports = function(env) {
     }),
 
     // create css bundle
-    new ExtractTextPlugin(isProd ? 'tb-[hash].css' : 'tb.css'),
+    new ExtractTextPlugin(isProd ? 'vineyard-[hash].css' : 'vineyard.css'),
 
     // create index.html
     new HtmlWebpackPlugin({
-      filename: isProd ? 'tb.html' : 'index.html',
+      filename: isProd ? 'vineyard.html' : 'index.html',
       template: htmlTemplate,
       inject: true,
       production: isProd,
@@ -115,25 +115,25 @@ module.exports = function(env) {
     ? './index.js'
     : [
         // activate HMR for React
-        'react-hot-loader/patch',
+      'react-hot-loader/patch',
 
         // bundle the client for webpack-dev-server
         // and connect to the provided endpoint
-        `webpack-dev-server/client?http://${host}:${port}`,
+      `webpack-dev-server/client?http://${host}:${port}`,
 
         // bundle the client for hot reloading
         // only- means to only hot reload for successful updates
-        'webpack/hot/only-dev-server',
+      'webpack/hot/only-dev-server',
 
         // the entry point of our app
-        './index.js',
-      ]
+      './index.js',
+    ]
 
   return {
     devtool: isProd ? 'source-map' : 'cheap-module-source-map',
     context: sourcePath,
     entry: {
-      tb: entryPoint,
+      vineyard: entryPoint,
       vendor: Object.keys(pkg.dependencies),
     },
     output: {
