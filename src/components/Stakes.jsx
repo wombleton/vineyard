@@ -3,10 +3,14 @@ import { withFirebase } from 'react-redux-firebase'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 import _ from 'lodash'
-import { TextField } from 'material-ui'
+import { TextField, Typography } from 'material-ui'
 
 class Stakes extends React.Component {
   setStakes = e => {
+    const cosigned = _.get(this, 'props.stakes.cosigned')
+    if (cosigned) {
+      return
+    }
     const { sceneId, firebase } = this.props
     const { uid: author } = firebase.auth().currentUser
     firebase.set(`/scenes/${sceneId}/stakes`, {
@@ -15,14 +19,22 @@ class Stakes extends React.Component {
     })
   }
   render = () => {
-    const val = _.get(this, 'props.scene.stakes.val')
+    const stakes = _.get(this, 'props.stakes', {})
+    const { cosigned, val } = stakes
+
+    if (cosigned) {
+      return <Typography>{val}</Typography>
+    }
     return (
       <TextField
-        onChange={this.setStakes}
-        value={val}
+        fullWidth
+        helperText="What becomes either true or false afterwards"
         label="Stakes"
-        placeholder="Set stakes for this scene"
         multiline
+        onChange={this.setStakes}
+        placeholder="Set stakes for this scene"
+        required
+        value={val}
       />
     )
   }
@@ -31,7 +43,7 @@ class Stakes extends React.Component {
 const enhance = compose(
   withFirebase,
   connect((state, props) => ({
-    scene: _.get(state, `firebase.data.scenes.${props.sceneId}`),
+    stakes: _.get(state, `firebase.data.scenes.${props.sceneId}.stakes`),
   }))
 )
 export default enhance(Stakes)
